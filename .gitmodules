@@ -1,0 +1,6 @@
+[submodule "extern/rapidjson"]
+	path = extern/rapidjson
+	url = git@github.com:Tencent/rapidjson.git
+[submodule "extern/imgui"]
+	path = extern/imgui
+	url = git@github.com:ocornut/imgui.git
