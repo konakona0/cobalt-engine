@@ -1,6 +1,6 @@
 #include <GLFW/glfw3.h>
-#include "input.h"
-#include "render.h"
+#include "sys/input.h"
+#include "sys/render.h"
 namespace cbt
 {
 namespace input

@@ -1,4 +1,4 @@
-
+#pragma once
 namespace cbt
 {
 namespace input

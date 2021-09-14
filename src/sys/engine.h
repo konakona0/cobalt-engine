@@ -2,6 +2,7 @@
 //
 // static engine with Engine::Engine instance
 
+#pragma once
 #include <cstdint>
 namespace cbt
 {

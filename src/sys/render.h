@@ -1,3 +1,4 @@
+#pragma once
 #include <cstdint>
 
 // so render.h doesnt need to include GL.h
@@ -16,8 +17,6 @@ void init();
 void draw();
 uint32_t update();
 GLFWwindow *get_glfw_window();
-// TODO TEMPORARY!!
-void object_draw();
 
 void kill();
 

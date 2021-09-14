@@ -5,12 +5,11 @@ CC=g++
 # g++ is the actual compiler, ignore clang for now
 
 CFLAGS  = -g -std=c++20 -Wall -Wformat 
-CFLAGS += -Iinclude/
+CFLAGS += -Iinclude/ -Isrc/
 
-SRCDIR  = src/
-SRCDIR += src/sys/
+SRCDIR = src/
 
-LIBS= -lglfw -lGL -lGLEW 
+LIBS= -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi -lglfw -lGL -lGLEW 
 
 OUTDIR=out/
 EXE=out/cobalt
@@ -32,6 +31,7 @@ $(shell cd ..)
 OBJ_NAMES = $(addsuffix $(OBJ_ABBREV), $(basename $(SOURCES)))
 OBJS = $(addprefix $(OUTDIR), $(OBJ_NAMES))
 
+.PHONY: all clean run rebuild list_objects list_sources list_headers list_cflags list_srcdir
 
 all: $(EXE)
 	@echo Build Complete for Cobalt Engine

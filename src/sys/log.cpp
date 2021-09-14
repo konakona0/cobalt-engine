@@ -1,4 +1,4 @@
-#include "log.h"
+#include "sys/log.h"
 #include <iostream>
 namespace cbt
 {
@@ -17,7 +17,7 @@ void write_log(log_level level, std::string &msg,
                const source_location &location)
 {
 #ifdef __GNUG__
-  std::cout << "gnug on\n";
+  // std::cout << "gnug on\n";
 #endif
   // TODO write lines to buffer before output
 
