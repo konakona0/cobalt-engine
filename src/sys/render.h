@@ -11,8 +11,6 @@ namespace cbt
 {
 namespace renderer
 {
-void init();
-
 gl_shader get_default_shader();
 void init();
 void draw();

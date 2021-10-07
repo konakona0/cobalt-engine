@@ -1,3 +1,5 @@
+#ifndef TEXPRC_H
+#define TEXPRC_H
 #include <cstdint>
 namespace cbt
 {
@@ -23,3 +25,4 @@ void init();
 } // namespace texprc
 
 } // namespace cbt
+#endif

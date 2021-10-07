@@ -1,9 +1,11 @@
 #include <cstdint>
-#include "render.h"
+#include "sys/render.h"
 #include "sys/log.h"
 #include "sys/core.h"
 
 namespace cbt
+{
+namespace engine
 {
 
 // engine - core engine loop
@@ -14,7 +16,7 @@ namespace cbt
 uint32_t init()
 {
   // init renderer
-  cbt::renderer::init();
+  renderer::init();
   // init input
   // init audio
   // init object
@@ -27,6 +29,8 @@ uint32_t init()
 
   return 0;
 }
+
+float get_dt() { return core::dt; }
 
 uint32_t update()
 {
@@ -65,5 +69,6 @@ uint32_t exit()
   renderer::kill();
   return 0;
 }
+} // namespace engine
 } // namespace cbt
 

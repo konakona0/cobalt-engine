@@ -1,3 +1,5 @@
+#ifndef GL_SHADER_H
+#define GL_SHADER_H
 #pragma once
 #include <string>
 #include <fstream>
@@ -21,3 +23,4 @@ public:
   unsigned int ID;
 };
 } // namespace cbt
+#endif

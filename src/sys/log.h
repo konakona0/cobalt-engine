@@ -1,3 +1,5 @@
+#ifndef LOG_H
+#define LOG_H
 #include <string>
 #include <fmt/core.h>
 
@@ -30,3 +32,4 @@ void crit(std::string,
           const source_location &location = source_location::current());
 } // namespace log
 } // namespace cbt
+#endif

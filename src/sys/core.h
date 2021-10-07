@@ -1,17 +1,20 @@
+#ifndef CORE_H
+#define CORE_H
+#pragma once
 // CODENAME: Compliance, protocol, directive
+
 //
 // Tentative names:
 //  Compile
 //
 
-#pragma once
 #include <chrono>
 namespace cbt
 {
-
 namespace core
 {
-decltype(std::chrono::high_resolution_clock::now()) frame_begin, frame_end;
+static decltype(std::chrono::high_resolution_clock::now()) frame_begin,
+    frame_end;
 static float dt = 0.f;
 
 // taken from Acid engine Sources/Utils/NonCopyable.hpp
@@ -30,3 +33,4 @@ public:
 };
 } // namespace core
 } // namespace cbt
+#endif

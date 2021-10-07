@@ -7,9 +7,9 @@
 int main()
 {
   // cobalt engine start
-  cbt::init();
+  cbt::engine::init();
   int exit_code = 1;
-  while (exit_code != 0) exit_code = cbt::update();
-  cbt::exit();
+  while (exit_code != 0) exit_code = cbt::engine::update();
+  cbt::engine::exit();
   return 0;
 }

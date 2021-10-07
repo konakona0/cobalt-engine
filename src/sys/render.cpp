@@ -1,4 +1,6 @@
 #include "sys/render.h"
+#include "sys/engine.h"
+#include "sys/core.h"
 #include <cstdint>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
@@ -96,6 +98,9 @@ void init()
 
 gl_shader get_default_shader() { return *default_shader; }
 
+float test_char_timer        = 0.f;
+const float TEST_TIMER_LIMIT = 0.8f;
+
 uint32_t update()
 {
   // credit: gary herron
@@ -112,9 +117,12 @@ uint32_t update()
   glClearColor(0, 0, 0, 1.0f);
   glClear(GL_COLOR_BUFFER_BIT);
   CHECKERROR;
-  // draw all objects
 
-  glyph::render("test", 25.f, 25.f, 1.f, glm::vec3(0.5f, 0.8f, 0.2f));
+  glyph::render(fmt::format("dt: {:f}", engine::get_dt()),
+                25.f,
+                25.f,
+                1.f,
+                glm::vec3(0.5f, 0.8f, 0.2f));
   CHECKERROR;
 
   glfwSwapBuffers(window);

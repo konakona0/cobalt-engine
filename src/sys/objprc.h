@@ -1,3 +1,5 @@
+#ifndef OBJPRC_H
+#define OBJPRC_H
 // combination of object manager and object class
 
 #pragma once
@@ -17,3 +19,4 @@ uint32_t exit();
 
 } // namespace objprc
 } // namespace cbt
+#endif
