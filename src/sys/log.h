@@ -1,4 +1,5 @@
 #include <string>
+#include <fmt/core.h>
 
 // source_location header only defined in gnu c++20 (as of july 2021)
 #if defined(__clang__)

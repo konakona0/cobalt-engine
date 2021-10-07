@@ -1,9 +1,14 @@
+#ifndef CMP_TEMPLATE_H
+#define CMP_TEMPLATE_H
 #pragma once
 #include <cstdint>
 #include <rapidjson/document.h>
 #include <rapidjson/prettywriter.h>
 #include <rapidjson/ostreamwrapper.h>
 #include <glm/glm.hpp>
+
+// forward declaration
+typedef class object object;
 
 /// \brief custom typedef for writing rapidjson object
 typedef rapidjson::PrettyWriter<rapidjson::StringBuffer> &rj_writer;
@@ -13,21 +18,16 @@ typedef const rapidjson::Value &rj_value;
 
 namespace cbt
 {
-enum cmp_type
+enum class cmp_type
 {
-  cmp_transform,
-  cmp_sprite,
-  cmp_physics,
-  cmp_collider,
-  cmp_script,
+  transform,
+  sprite,
+  physics,
+  collider,
+  script,
   cmp_MAX
 };
 
-// TODO
-//
-// wtf do we do about unique/global attributes
-// should there be a blank void* in here that can be overridden by any
-// component, since they will always have one
 class component
 {
 public:
@@ -48,8 +48,11 @@ protected:
   component() = delete;
   component(cmp_type type) : type_(type) {}
   virtual ~component() {}
+  object *parent_;
 
 private:
   cmp_type type_;
+  friend class object;
 };
 } // namespace cbt
+#endif

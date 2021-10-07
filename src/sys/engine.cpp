@@ -2,7 +2,6 @@
 #include "render.h"
 #include "sys/log.h"
 #include "sys/core.h"
-#include "vulkan/vulkan.h"
 
 namespace cbt
 {
@@ -15,7 +14,7 @@ namespace cbt
 uint32_t init()
 {
   // init renderer
-  cbt::renderer::gl_impl::init();
+  cbt::renderer::init();
   // init input
   // init audio
   // init object
@@ -56,15 +55,14 @@ uint32_t update()
   // - figure out render/update structure
   // - fuck
 
-  return renderer::gl_impl::update();
+  return renderer::update();
 
   // return opcode 0
   // return 0;
 }
 uint32_t exit()
 {
-  printf("cbt exit\n");
-  renderer::gl_impl::kill();
+  renderer::kill();
   return 0;
 }
 } // namespace cbt

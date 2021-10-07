@@ -1,0 +1,82 @@
+#include "sys/object.h"
+#include "sys/log.h"
+#include "cmp/cmp_sprite.h"
+#include "cmp/cmp_transform.h"
+#include "cmp/cmp_template.h"
+
+namespace cbt
+{
+
+object::object(const char *name) { ; }
+object::object(const object &rhs) {}
+object::object(rapidjson::Document &doc, const char *name) {}
+void object::readComponents(const rj_array &components) {}
+
+void object::init()
+{
+  for (auto i = 0; i < static_cast<int>(cmp_type::cmp_MAX); i++)
+  {
+    cmp_list[i] = nullptr;
+  }
+}
+
+uint32_t object::update(float dt)
+{
+  for (auto i = 0; i < static_cast<int>(cmp_type::cmp_MAX); i++)
+  {
+    cmp_list[i]->update(dt);
+  }
+  return 0;
+}
+
+void object::destroy() { destroyed = true; }
+
+void object::purge()
+{
+  for (unsigned i = 0; i < static_cast<int>(cmp_type::cmp_MAX); i++)
+  {
+    component **tmp = &cmp_list[i];
+    cmp_list[i]     = nullptr;
+    delete *tmp;
+  }
+}
+
+bool object::is_destroyed() const { return destroyed; }
+
+component *object::get_cmp(cmp_type _type) const
+{
+  return cmp_list[static_cast<int>(_type)];
+}
+
+void object::add_cmp(component *new_cmp)
+{
+  auto newcmp_type = new_cmp->get_type();
+  if (cmp_list[static_cast<int>(newcmp_type)])
+  {
+    log::warn("Attempted to assign pre-existing component");
+  }
+  else
+  {
+    cmp_list[static_cast<int>(newcmp_type)] = new_cmp;
+  }
+}
+
+void object::draw()
+{
+  if (cmp_list[static_cast<int>(cmp_type::transform)] == nullptr)
+  {
+    log::error(fmt::format("Object {} (ID {}) has no transform, cannot draw",
+                           _name, ID));
+    return;
+  }
+  if (cmp_list[static_cast<int>(cmp_type::sprite)] == nullptr)
+  {
+    log::error(
+        fmt::format("Object {} (ID {}) has no sprite, cannot draw", _name, ID));
+    return;
+  }
+
+  auto tr = GET_CMP(transform);
+}
+
+} // namespace cbt

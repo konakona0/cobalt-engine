@@ -1,25 +1,23 @@
+#ifndef RENDERER_H
+#define RENDERER_H
 #pragma once
 #include <cstdint>
+#include <common/gl_shader.h>
 
-// so render.h doesnt need to include GL.h
-typedef class GLFWwindow GLFWwindow;
+#define SCR_WIDTH 1280
+#define SCR_HEIGHT 720
 
 namespace cbt
 {
 namespace renderer
 {
+void init();
 
-namespace gl_impl
-{
-// OpenGL 3 implementation
-
+gl_shader get_default_shader();
 void init();
 void draw();
 uint32_t update();
-GLFWwindow *get_glfw_window();
-
 void kill();
-
-} // namespace gl_impl
 } // namespace renderer
 } // namespace cbt
+#endif

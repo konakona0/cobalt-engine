@@ -5,11 +5,15 @@ CC=g++
 # g++ is the actual compiler, ignore clang for now
 
 CFLAGS  = -g -std=c++20 -Wall -Wformat 
-CFLAGS += -Iinclude/ -Isrc/
+CFLAGS += -Iinclude/ -Isrc/ -I/usr/include/freetype2/
+CFLAGS += `pkg-config --cflags --static --libs freetype2`
+MEMDEBUGGER=valgrind
+MEMFLAGS= -q --leak-check=full --show-reachable=yes --tool=memcheck --trace-children=yes \
 
 SRCDIR = src/
 
 LIBS= -lvulkan -ldl -lpthread -lX11 -lXxf86vm -lXrandr -lXi -lglfw -lGL -lGLEW 
+LIBS += -lglbinding -lX11 -lGLU -lGL `pkg-config --static --libs glfw3`
 
 OUTDIR=out/
 EXE=out/cobalt
@@ -33,6 +37,7 @@ OBJS = $(addprefix $(OUTDIR), $(OBJ_NAMES))
 
 .PHONY: all clean run rebuild list_objects list_sources list_headers list_cflags list_srcdir
 
+
 all: $(EXE)
 	@echo Build Complete for Cobalt Engine
 
@@ -45,6 +50,9 @@ $(EXE): $(OBJS)
 
 run: $(EXE) $(OBJS)
 	./$(EXE) 
+
+memcheck: $(EXE) $(OBJS)
+	valgrind $(MEMFLAGS) ./$(EXE)
 
 clean:
 	-@rm -rf $(EXE) $(OBJS)

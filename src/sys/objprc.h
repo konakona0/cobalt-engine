@@ -3,17 +3,17 @@
 #pragma once
 #include <cstdint>
 #include <list>
+#include "cmp/cmp_template.h"
+#include "sys/object.h"
 namespace cbt
 {
-namespace obj
-{
-namespace objman
+// object class
+namespace objprc
 {
 void spawn_object(uint32_t);
 uint32_t init();
 uint32_t update(float);
 uint32_t exit();
 
-} // namespace objman
-} // namespace obj
+} // namespace objprc
 } // namespace cbt

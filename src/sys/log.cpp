@@ -25,10 +25,10 @@ void write_log(log_level level, std::string &msg,
   switch (level)
   {
     // TODO give these colors and bold
-    case DEBUG: std::cout << "[DEBUG]"; break;
-    case WARN: std::cout << "[WARN]"; break;
-    case ERROR: std::cout << "[ERROR]"; break;
-    case CRIT: std::cout << "[CRITICAL]"; break;
+    case DEBUG: std::cout << "\x1b[1;36m[DEBUG]\033[0m"; break;
+    case WARN: std::cout << "\x1b[1;93;100m[WARN]\033[0m"; break;
+    case ERROR: std::cout << "\x1b[1;31;40m[ERROR]\033[0m"; break;
+    case CRIT: std::cout << "\x1b[1;100;41m[CRITICAL]\033[0m"; break;
   }
 
   std::cout << " " << msg;

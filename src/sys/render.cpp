@@ -1,35 +1,48 @@
 #include "sys/render.h"
 #include <cstdint>
-//#include <glbinding/gl/gl.h>
-//#include <glbinding/Binding.h>
 #include <GL/glew.h>
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include "sys/log.h"
+#include "sys/glyph.h"
+#include <GL/glu.h>
 
-#include "vulkan/vulkan.h"
-#include "common/loadShader.h"
+#define CHECKERROR                                                             \
+  {                                                                            \
+    GLenum err = glGetError();                                                 \
+    if (err != GL_NO_ERROR)                                                    \
+    {                                                                          \
+      fprintf(stderr,                                                          \
+              "OpenGL error (at line %d): %s\n",                               \
+              __LINE__,                                                        \
+              gluErrorString(err));                                            \
+      exit(-1);                                                                \
+    }                                                                          \
+  }
+
+// thanks gary
 
 namespace cbt
 {
 namespace renderer
 {
-namespace gl_impl
-{
-GLFWwindow *window;
-GLFWwindow *get_glfw_window() { return window; }
 
-static const GLfloat g_vertex_buffer_data[] = { -1.0f, -1.0f, 0.0f, 1.0f, -1.0f,
-                                                0.0f,  0.0f,  1.0f, 0.0f };
+glm::vec4 clear_color;
+GLFWwindow *window;
 
 GLuint vertexbuffer;
 GLuint programID;
 GLuint VertexArrayID;
 
+unsigned int quadVAO;
+
+gl_shader *default_shader;
+
+void framebuffer_size_callback(GLFWwindow *window, int width, int height);
+
 void init()
 {
   log::msg("GL render init start");
-  // glbinding::Binding::initialize(nullptr);
   if (!glfwInit())
   {
     exit(EXIT_FAILURE);
@@ -37,13 +50,13 @@ void init()
   }
 
   // ripped https://www.opengl-tutorial.org/beginners-tutorials
-  glfwWindowHint(GLFW_SAMPLES, 4);
+  // glfwWindowHint(GLFW_SAMPLES, 4);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
   glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
   glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
 
-  window = glfwCreateWindow(1280, 720, "GL Window", NULL, NULL);
+  window = glfwCreateWindow(SCR_WIDTH, SCR_HEIGHT, "GL Window", NULL, NULL);
 
   if (!window)
   {
@@ -53,7 +66,9 @@ void init()
     exit(EXIT_FAILURE);
   }
   glfwMakeContextCurrent(window);
-  glewExperimental = true;
+  glfwSetFramebufferSizeCallback(window, framebuffer_size_callback);
+  CHECKERROR;
+  // glfwSwapInterval(1);
 
   // GLEW impl
   if (glewInit() != GLEW_OK)
@@ -62,39 +77,49 @@ void init()
     glfwTerminate();
     exit(EXIT_FAILURE);
   }
-  glfwSetInputMode(window, GLFW_STICKY_KEYS, GL_TRUE);
-  glClearColor(0.5, 0.5, 0.5, 1.0);
 
-  glGenVertexArrays(1, &VertexArrayID);
-  glBindVertexArray(VertexArrayID);
+  CHECKERROR;
+  glEnable(GL_CULL_FACE);
+  glEnable(GL_BLEND);
+  glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+  CHECKERROR;
 
-  programID = LoadShaders("src/shader/default.vert", "src/shader/default.frag");
-
-  glGenBuffers(1, &vertexbuffer);
-  glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-  glBufferData(GL_ARRAY_BUFFER,
-               sizeof(g_vertex_buffer_data),
-               g_vertex_buffer_data,
-               GL_STATIC_DRAW);
+  default_shader =
+      new gl_shader("src/shader/default.vert", "src/shader/default.frag");
 
   log::msg("GL render init finish");
+  CHECKERROR;
+
+  glyph::init();
+  CHECKERROR;
 }
+
+gl_shader get_default_shader() { return *default_shader; }
+
 uint32_t update()
 {
-  glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+  // credit: gary herron
+  // anatomy of a pass
+  // - choose a shader
+  // - choose an FBO/Render-Target
+  // - set the viewport
+  // - clear the screen
+  // - set uniform variables depended by the shader
+  // - draw geometry
+  // - unset FBO
+  // - unset shader
+
+  glClearColor(0, 0, 0, 1.0f);
+  glClear(GL_COLOR_BUFFER_BIT);
+  CHECKERROR;
   // draw all objects
 
-  // triangle test
-
-  glUseProgram(programID);
-  glEnableVertexAttribArray(0);
-  glBindBuffer(GL_ARRAY_BUFFER, vertexbuffer);
-  glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void *)0);
-  glDrawArrays(GL_TRIANGLES, 0, 3);
-  glDisableVertexAttribArray(0);
+  glyph::render("test", 25.f, 25.f, 1.f, glm::vec3(0.5f, 0.8f, 0.2f));
+  CHECKERROR;
 
   glfwSwapBuffers(window);
   glfwPollEvents();
+  CHECKERROR;
 
   if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS ||
       glfwWindowShouldClose(window))
@@ -108,7 +133,6 @@ uint32_t update()
 void kill()
 {
   log::msg("gl_impl renderer exit");
-  log::error("error test");
 
   glDeleteBuffers(1, &vertexbuffer);
   glDeleteVertexArrays(1, &VertexArrayID);
@@ -117,6 +141,10 @@ void kill()
   glfwTerminate();
 }
 
-} // namespace gl_impl
+void framebuffer_size_callback(GLFWwindow *window, int width, int height)
+{
+  glViewport(0, 0, width, height);
+}
+
 } // namespace renderer
 } // namespace cbt
