@@ -72,7 +72,16 @@ void init()
   ft_error = FT_Init_FreeType(&ft);
   ft_errorcheck(ft_error, "Freetype failed to init");
 
-  const char *font_name = "resource/fonts/Hack-Regular.ttf";
+  // cool pixel fonts
+  // tobi *
+  // proggytiny
+  // proggysquare
+  // crisp
+  // gohu
+  // pixelcarnage
+  // const char *font_name = "resource/fonts/Hack-Regular.ttf";
+  const char *font_name = "resource/fonts/ProggySquare.ttf";
+  // const char *font_name = "resource/fonts/CodingFontTobi1.pcf";
 
   FT_Face face;
   ft_error = FT_New_Face(ft, font_name, 0, &face);
@@ -80,7 +89,7 @@ void init()
       ft_error,
       fmt::format("Freetype failed to load font, {}", font_name).c_str());
 
-  FT_Set_Pixel_Sizes(face, 0, 12);
+  FT_Set_Pixel_Sizes(face, 0, 16);
   glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
   for (unsigned char c = 0; c < 128; c++)

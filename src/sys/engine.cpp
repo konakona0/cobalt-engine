@@ -2,6 +2,8 @@
 #include "sys/render.h"
 #include "sys/log.h"
 #include "sys/core.h"
+#include "sys/input.h"
+#include "util/console.h"
 
 namespace cbt
 {
@@ -18,6 +20,7 @@ uint32_t init()
   // init renderer
   renderer::init();
   // init input
+  input::init();
   // init audio
   // init object
   // init state
@@ -59,7 +62,10 @@ uint32_t update()
   // - figure out render/update structure
   // - fuck
 
-  return renderer::update();
+  renderer::update();
+  input::update(core::dt);
+  console::update(core::dt);
+  return 1;
 
   // return opcode 0
   // return 0;

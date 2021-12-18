@@ -1,4 +1,5 @@
 #include "sys/render.h"
+#include "util/console.h"
 #include "sys/engine.h"
 #include "sys/core.h"
 #include <cstdint>
@@ -6,7 +7,7 @@
 #include <GLFW/glfw3.h>
 #include <glm/glm.hpp>
 #include "sys/log.h"
-#include "sys/glyph.h"
+#include "util/glyph.h"
 #include <GL/glu.h>
 
 #define CHECKERROR                                                             \
@@ -14,9 +15,7 @@
     GLenum err = glGetError();                                                 \
     if (err != GL_NO_ERROR)                                                    \
     {                                                                          \
-      fprintf(stderr,                                                          \
-              "OpenGL error (at line %d): %s\n",                               \
-              __LINE__,                                                        \
+      fprintf(stderr, "OpenGL error (at line %d): %s\n", __LINE__,             \
               gluErrorString(err));                                            \
       exit(-1);                                                                \
     }                                                                          \
@@ -91,9 +90,7 @@ void init()
 
   log::msg("GL render init finish");
   CHECKERROR;
-
-  glyph::init();
-  CHECKERROR;
+  console::init();
 }
 
 gl_shader get_default_shader() { return *default_shader; }
@@ -118,22 +115,9 @@ uint32_t update()
   glClear(GL_COLOR_BUFFER_BIT);
   CHECKERROR;
 
-  glyph::render(fmt::format("dt: {:f}", engine::get_dt()),
-                25.f,
-                25.f,
-                1.f,
-                glm::vec3(0.5f, 0.8f, 0.2f));
-  CHECKERROR;
-
+  console::draw();
   glfwSwapBuffers(window);
-  glfwPollEvents();
   CHECKERROR;
-
-  if (glfwGetKey(window, GLFW_KEY_ESCAPE) == GLFW_PRESS ||
-      glfwWindowShouldClose(window))
-  {
-    return 0;
-  }
 
   return 1;
 }
@@ -153,6 +137,8 @@ void framebuffer_size_callback(GLFWwindow *window, int width, int height)
 {
   glViewport(0, 0, width, height);
 }
+
+GLFWwindow *get_glfw_window() { return window; }
 
 } // namespace renderer
 } // namespace cbt
