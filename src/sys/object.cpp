@@ -7,10 +7,27 @@
 namespace cbt
 {
 
-object::object(const char *name) { ; }
+// TODO serialized next obj ID
+
+static unsigned int next_ID = 0;
+
+object::object(const char *name) 
+{ 
+  // TODO steps
+  // all from console
+  // create object archetype
+  // spawn object from archetype
+  ID = next_ID;
+  next_ID++;
+  _name = name;
+}
+
 object::object(const object &rhs) {}
 object::object(rapidjson::Document &doc, const char *name) {}
-void object::readComponents(const rj_array &components) {}
+void object::readComponents(const rj_array &components) 
+{
+
+}
 
 void object::init()
 {
@@ -46,6 +63,17 @@ bool object::is_destroyed() const { return destroyed; }
 component *object::get_cmp(cmp_type _type) const
 {
   return cmp_list[static_cast<int>(_type)];
+}
+
+
+unsigned int object::get_id() const
+{
+  return ID;
+}
+
+const char *object::get_name() const
+{
+  return _name;
 }
 
 void object::add_cmp(component *new_cmp)

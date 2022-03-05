@@ -2,6 +2,7 @@
 #include "sys/render.h"
 #include "sys/log.h"
 #include "sys/core.h"
+#include "sys/objprc.h"
 #include "sys/input.h"
 #include "util/console.h"
 
@@ -23,6 +24,7 @@ uint32_t init()
   input::init();
   // init audio
   // init object
+  objprc::init();
   // init state
   // init editor?
 

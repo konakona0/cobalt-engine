@@ -12,7 +12,12 @@ namespace cbt
 // object class
 namespace objprc
 {
+unsigned int create_obj();
 void spawn_object(uint32_t);
+
+std::list<object*> &get_active_objlist();
+std::list<object*> &get_inactive_objlist();
+
 uint32_t init();
 uint32_t update(float);
 uint32_t exit();

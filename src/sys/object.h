@@ -34,7 +34,9 @@ public:
 
   void draw();
 
-  void add_cmp(component *new_cmp);
+  unsigned int get_id() const;
+  const char *get_name() const;
+
   component *get_cmp(cmp_type) const;
 
   template <typename T>
@@ -42,7 +44,8 @@ public:
   {
     return dynamic_cast<T *>(get_cmp(type));
   }
-
+protected:
+  void add_cmp(component *new_cmp);
 private:
   // component list
   // TODO support chained objects later,
@@ -54,6 +57,7 @@ private:
   // if ANY component is altered, it will be registered as a new
   // object, in turn a new archetype, and be serialized as such
   object *archetype_origin_ = nullptr;
+
 
   const char *_name;
   unsigned int ID;

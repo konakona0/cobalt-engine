@@ -2,6 +2,7 @@
 #include <iostream>
 #include <list>
 #include "glyph.h"
+#include "parser.h"
 #include "sys/log.h"
 
 namespace cbt
@@ -13,19 +14,30 @@ bool active;
 std::string console_buffer;
 std::list<std::string> history;
 
+const float HISTORY_LINGER_MAX= 4.f;
+float history_linger_timer = 0.f;
+
 unsigned history_display_max   = 10;
 float blinking_cursor_duration = 0.4f;
 float blinking_cursor_timer    = 0.f;
 bool blinking_cursor_blink     = false;
 
+
 glm::vec2 console_position;
 glm::vec3 console_color;
+
+void execute_current_buffer()
+{
+  history.push_front(std::string(console_buffer));
+  parser::parse_command(console_buffer);
+  console_buffer.clear();
+  active = false;
+}
 
 void return_current_line()
 {
   log::msg("returning current console line");
-  history.push_front(std::string(console_buffer));
-  console_buffer.clear();
+  execute_current_buffer();
 }
 
 std::string &get_history_entry(int index)
@@ -41,6 +53,17 @@ std::string &get_history_entry(int index)
 }
 
 std::string &get_line_buffer() { return console_buffer; }
+
+void _print_line(std::string &msg)
+{
+  history.push_front(std::string(msg));
+}
+
+void print_line(std::string msg)
+{
+  _print_line(msg);
+}
+
 
 void set_active(bool val)
 {
@@ -66,7 +89,12 @@ uint32_t update(float dt)
     blinking_cursor_timer = blinking_cursor_duration;
     blinking_cursor_blink = !blinking_cursor_blink;
   }
-  blinking_cursor_timer -= dt;
+ 
+  if (active)
+    history_linger_timer = HISTORY_LINGER_MAX;
+  else if (history_linger_timer > 0.f)
+    history_linger_timer -= dt;
+
   return 1;
 }
 void draw()
@@ -76,6 +104,10 @@ void draw()
     char blinky = blinking_cursor_blink ? '|' : ' ';
     glyph::render(fmt::format("{}{}", console_buffer, blinky),
                   console_position.x, console_position.y, 1.f, console_color);
+  }
+
+  if (history_linger_timer > 0.f)
+  {
     for (size_t i = 0; i < history_display_max; ++i)
     {
       if (i < history.size())
@@ -83,6 +115,8 @@ void draw()
                       (console_position.y + ((i + 1) * (16))), 1.f,
                       console_color * 0.8f);
     }
+
+
   }
 }
 bool get_active() { return active; }

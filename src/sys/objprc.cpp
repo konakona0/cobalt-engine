@@ -11,18 +11,38 @@
 namespace cbt
 {
 
-namespace obj
-{
-
 namespace objprc
 {
 
-static std::list<std::shared_ptr<object>> active_objlist;
+std::list<object*> active_objlist;
+
+std::list<object*>& get_active_objlist()
+{
+  return active_objlist;
+}
 
 // object archetypes are obj pointers and unsigned int IDs
-static std::list<std::pair<std::unique_ptr<object>, uint32_t>> inactive_objlist;
+std::list<object*> inactive_objlist;
 
-uint32_t init() { return 0; }
+std::list<object*> &get_inactive_objlist()
+{
+  return inactive_objlist;
+}
+
+unsigned int create_obj()
+{
+  // blank object
+  
+  auto obj = new object("unnamed object");
+  inactive_objlist.push_front(obj);
+  return obj->get_id();
+}
+
+uint32_t init() 
+{ 
+  // TODO stream from json
+  return 0; 
+}
 
 uint32_t update(float dt)
 {
@@ -38,6 +58,7 @@ uint32_t exit()
   // TODO free all objects
   return 0;
 }
+
+
 } // namespace objprc
-} // namespace obj
 } // namespace cbt

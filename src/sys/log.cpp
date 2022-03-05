@@ -1,5 +1,6 @@
 #include "sys/log.h"
 #include <iostream>
+#include "util/console.h"
 namespace cbt
 {
 namespace log
@@ -34,6 +35,7 @@ void write_log(log_level level, std::string &msg,
   std::cout << " " << msg;
   if (level != DEBUG)
   {
+    console::print_line(msg);
     std::cout << " (file: " << location.file_name()
               << ", fn: " << location.function_name() << " [" << location.line()
               << ":" << location.column() << "]";

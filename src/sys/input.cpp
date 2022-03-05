@@ -59,8 +59,8 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action,
 
   char c_key = static_cast<char>(key);
   if (action == GLFW_REPEAT) return; // Because keyboard autorepeat is evil.
-  log::msg(fmt::format("key callback {}({}) s:{} {}", c_key, key, scancode,
-                       ACTION[action].c_str()));
+  //log::msg(fmt::format("key callback {}({}) s:{} {}", c_key, key, scancode,
+                       //ACTION[action].c_str()));
 
   if (console::get_active())
   {
@@ -70,7 +70,7 @@ void key_callback(GLFWwindow *window, int key, int scancode, int action,
       {
         case GLFW_KEY_GRAVE_ACCENT: console::toggle_active(); break;
         case GLFW_KEY_ESCAPE: console::set_active(false); break;
-        case GLFW_KEY_ENTER: console::return_current_line(); break;
+        case GLFW_KEY_ENTER: console::execute_current_buffer(); break;
         case GLFW_KEY_BACKSPACE: console::get_line_buffer().pop_back(); break;
       }
     }

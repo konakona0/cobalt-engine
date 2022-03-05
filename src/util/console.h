@@ -8,7 +8,11 @@ namespace console
 {
 
 std::string &get_line_buffer();
-void return_current_line();
+void execute_current_buffer();
+
+// TODO overload with various str types
+void print_line(std::string); 
+
 void set_active(bool);
 bool get_active();
 void toggle_active();

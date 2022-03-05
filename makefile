@@ -6,6 +6,7 @@ CC=g++
 
 CFLAGS  = -g -std=c++20 -Wall -Wformat 
 CFLAGS += -Iinclude/ -Isrc/ -I/usr/include/freetype2/
+CFLAGS += -Iextern/rapidjson/include/rapidjson/
 CFLAGS += `pkg-config --cflags --static --libs freetype2`
 MEMDEBUGGER=valgrind
 MEMFLAGS= -q --leak-check=full --show-reachable=yes --tool=memcheck --trace-children=yes \
